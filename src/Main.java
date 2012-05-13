@@ -102,7 +102,7 @@ public class Main {
         ImmutablePair<String, Integer> ip_port = null;
         for (int i=start; i<bytes.length; i++) {
 
-            b = bytes[i];
+            b = bytes[i]; //this might be out of bounds at the end
             //System.out.println((char)b + "--" + b);
 
             //find the index of the next '/': (this should always be 7 more
@@ -114,6 +114,7 @@ public class Main {
             } catch(IllegalArgumentException iae) { 
                 ip_port = null;
             }
+
             if (ip_port != null) {
                 System.out.println("ip:"+ip_port.left+" port:"+ip_port.right);
             } else {
@@ -137,6 +138,7 @@ public class Main {
             return pair;
         }
 
+        // the &0xff "turns" the signed byte into an unsigned (in essence)
         String ip = 
             (series[0]&0xFF) + "." + 
             (series[1]&0xff) + "." + 
@@ -146,14 +148,6 @@ public class Main {
         //System.out.println("ip:" + ip + " port:"+ port);
         return new ImmutablePair<String, Integer>(ip, port);
     }
-
-    /*
-    byte b = -128;
-    //To Char
-    char c = (char)(b & 0xFF);
-    //To Byte
-    byte b2 = (byte)(c & 0xFF);
-    */
 
 
 }
