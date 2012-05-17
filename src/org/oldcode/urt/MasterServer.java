@@ -14,15 +14,32 @@ import java.lang.IllegalArgumentException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import org.oldcode.urt.MessageResponse;
+
 public class MasterServer {
 
-    static String host = "master.urbanterror.info";
-    static int port = 27950;
-    static byte oob = (byte)0xff;
+    //private String host = "master.urbanterror.info";
+    byte[] addr;// = new byte[4];
+    private int port = 27950;
+    private byte oob = (byte)0xff;
 
-    public static ArrayList<ImmutablePair<String, Integer>> getServerList() 
+    private DatagramPacket dp = null;
+    private InetAddress ia = null;
+    private DatagramSocket ds = null;
+
+    public MasterServer() {
+        // use a static initializer:
+        this.addr = new byte[4];
+        this.addr[0] = (byte)91;
+        this.addr[1] = (byte)121;
+        this.addr[2] = (byte)24;
+        this.addr[3] = (byte)62;
+    }
+
+    public ArrayList<ImmutablePair<String, Integer>> getServerList() 
     {
-        byte[] bytes = getServersResponse();
+        byte[] bytes = getServersResponse(); 
+
         if (bytes != null) {
             //System.out.println("bytes.length:"+bytes.length);        
             return parse(bytes);
@@ -30,64 +47,34 @@ public class MasterServer {
         return null;
     }
 
-    public static byte[] getServersResponse() {
-
-        DatagramSocket ds = null;
-        DatagramPacket dp = null;
-        InetAddress ia = null;
-
+    public byte[] getServersResponse() {
+     
+        MessageResponse mr = null;
         try {
-            ds = new DatagramSocket();
-            ia = InetAddress.getByName(host);
-
-            String out = "xxxxgetservers 68 empty full";
-            byte[] buff = out.getBytes();
-            buff[0] = oob;
-            buff[1] = oob;
-            buff[2] = oob;
-            buff[3] = oob;
-            dp = new DatagramPacket(buff, buff.length, ia, port);
-
-            ds.send(dp);
-
-
-            //public String getResponse() {
-            DatagramPacket dpacket;
-            byte[] buffer = new byte[2048];
-            String output = "";
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            while (true) {
-                //System.out.println("while (true)...");
-                try {
-                    dpacket = new DatagramPacket(buffer, buffer.length);
-                    // Decrease value speeds things up, increase slows things down.
-                    ds.setSoTimeout(800);
-                    
-                    //this is where we should preempt check for the exc. case:
-                    ds.receive(dpacket);
-
-                    String packet = new String(dpacket.getData(), 0, dpacket.getLength());
-                    output += packet;
-                    baos.write(dpacket.getData(), 0, dpacket.getLength());
-                } catch (IOException e1) { //we shouldn't use an exception for flow control
-                    //System.out.println("e1:"+e1);
-                    break;
-                }
-            } 
-            
-            //System.out.println(output);
-            //System.out.println(baos);
-
-            byte[] bytes = baos.toByteArray();
-            return bytes;
-            //parse(bytes);
-
+            mr = new MessageResponse(this.addr, this.port);//, "you are gay");
         } catch(Exception e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
+
+        
+        System.out.println("msg-resp: "+mr);
+        try {
+            mr.sendMessage("getservers 68 empty full");
+            //mr.sendMessage("getstatus");
+            byte[] r = mr.getResponse();
+
+            //System.out.println("r.length:" +r.length);
+            //for (byte b: r) {
+            //    System.out.println(b);
+            //}
+            return r;
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
         return null;
+
     }
 
 
@@ -100,7 +87,7 @@ public class MasterServer {
       four bytes are the ip and the last two bytes is the port number
       transmission of servers ends with '/EOF' at the end of the last packet
     */
-    public static ArrayList<ImmutablePair<String, Integer>> parse(byte[] bytes) 
+    public ArrayList<ImmutablePair<String, Integer>> parse(byte[] bytes) 
     {
         ArrayList<ImmutablePair<String, Integer>> list = new ArrayList<ImmutablePair<String, Integer>>();
 
@@ -153,7 +140,7 @@ public class MasterServer {
     }
     
     //series is intended to be the 7 bytes between /'s
-    public static ImmutablePair<String, Integer> parse_ip_port(byte[] series) {
+    public ImmutablePair<String, Integer> parse_ip_port(byte[] series) {
         ImmutablePair<String, Integer> pair = null;
         //System.out.println("parse_ip_port()..." + series[0] + "::" + series[series.length-1] + " length:"+series.length);
 
