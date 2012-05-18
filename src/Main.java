@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import java.io.IOException;
 import java.net.*;
+import java.io.ByteArrayOutputStream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -13,56 +14,91 @@ import org.oldcode.urt.MessageResponse;
 public class Main {
 
     public static void main(String[] args) {
-        run_master_query();
+        //run_master_query();
+        server_query();
     }
 
     public static void server_query() {
-        System.out.println("start...");
-        Util.test();
+        System.out.println("start server getstatus...");
 
-        /*
-        ip:85.25.109.153 port:27960
-        ip:91.121.6.213 port:27960
-        ip:188.138.48.106 port:27960
-        ip:195.110.8.164 port:27960
-        ip:69.60.116.216 port:27960
-        */
-        ServerDetail sd = new ServerDetail("123.23.123.12", 91223);
-        System.out.println("server-detail: "+sd);
-        //sm: 64.74.97.153
-        //master: 91.121.24.62  27950
+        //um3: 68.232.168.18
         byte[] addr = new byte[4];
-        addr[0] = (byte)91;
-        addr[1] = (byte)121;
-        addr[2] = (byte)24;
-        addr[3] = (byte)62;
+        addr[0] = (byte)68;
+        addr[1] = (byte)232;
+        addr[2] = (byte)168;
+        addr[3] = (byte)18;
+        int port = 27960;
+        //sm: 64.74.97.153 27960
+        byte[] sm_addr = new byte[4];
+        sm_addr[0] = (byte)64;
+        sm_addr[1] = (byte)74;
+        sm_addr[2] = (byte)97;
+        sm_addr[3] = (byte)153;
+        byte[] mst_addr = new byte[4];
+        mst_addr[0] = (byte)91;
+        mst_addr[1] = (byte)121;
+        mst_addr[2] = (byte)24;
+        mst_addr[3] = (byte)62;
+        int mst_port = 27950;
+        //67.202.120.216:27960 ut4_abbey
+        byte[] a_addr = new byte[4];
+        a_addr[0] = (byte)67;
+        a_addr[1] = (byte)202;
+        a_addr[2] = (byte)120;
+        a_addr[3] = (byte)216;
 
-        String host = "master.urbanterror.info";
-        int lport = 27950;
+        //URBANTERROR {Z9} Zombie Mode Server Join 35/40 173.236.38.244:27960 ut_rt
+        //URBANTERROR WWW.FALLIN-ANGELS.ORG Join 28/32 209.190.50.170:27960
 
 
-        MessageResponse mr = null;
+
+        byte oob = (byte)0xff;
+        String data = "getstatus";
+        DatagramPacket dp;
+        DatagramSocket ds = null;
+        InetAddress address = null;;
         try {
-            mr = new MessageResponse(addr, 27950, "you are gay");
+            address = InetAddress.getByAddress(a_addr);
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
-
-
-
-        System.out.println("msg-resp: "+mr);
+        System.out.println("address:"+address);
         try {
-            mr.sendMessage("getservers 68 empty full");
-            //mr.sendMessage("getstatus");
-            byte[] r = mr.getResponse();
-            System.out.println("r.length:" +r.length);
-            for (byte b: r) {
-                System.out.println(b);
-            }
-        } catch(IOException e) {
-            e.printStackTrace();
+            ds = new DatagramSocket();
+            String out = "xxxx"+data;
+            byte [] buff = out.getBytes();
+            buff[0] = oob;
+            buff[1] = oob;
+            buff[2] = oob;
+            buff[3] = oob;
+            dp = new DatagramPacket(buff, buff.length, address, port);
+            ds.send(dp);
+        } catch (Exception e) {
+            System.out.println("Send method in BowserQuery Failed with: "+e.getMessage());
         }
+
+        //get results
+        DatagramPacket dpacket;
+        byte[] buffer = new byte[2048];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        while (true) {
+            System.out.println("getr .");
+            try {
+                dpacket = new DatagramPacket(buffer, buffer.length);
+                ds.setSoTimeout(1000);
+                ds.receive(dpacket);
+                baos.write(dpacket.getData(), 0, dpacket.getLength());
+            } catch (IOException e) { //we shouldn't use an exception for flow control
+                System.out.println("e:"+e);
+                break;
+            }
+        } 
+            
+        byte[] bytes = baos.toByteArray();
+        //for (byte b: bytes) {            System.out.print(b+"-");                    }
+        System.out.println(new String(bytes));
         
     }
 

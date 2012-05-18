@@ -49,11 +49,11 @@ public class MessageResponse {
         buff[3] = this.oob;
         DatagramPacket dp = new DatagramPacket(buff, buff.length, this.address, this.port);
 
-        /*System.out.println("sending:" + buff);
+        System.out.println("sending:" + buff);
         for (byte b: buff) {
             System.out.print((char)b + " ");
-            }
-            System.out.println();*/
+        }
+        System.out.println();
         this.ds.send(dp);
     }
 
@@ -64,7 +64,7 @@ public class MessageResponse {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         while (true) {
-            //System.out.println("getr .");
+            System.out.println("getr .");
             try {
                 dpacket = new DatagramPacket(buffer, buffer.length);
                 // Decrease value speeds things up, increase slows things down.
