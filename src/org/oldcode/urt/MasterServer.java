@@ -21,11 +21,6 @@ public class MasterServer {
     //private String host = "master.urbanterror.info";
     byte[] addr;// = new byte[4];
     private int port = 27950;
-    private byte oob = (byte)0xff;
-
-    private DatagramPacket dp = null;
-    private InetAddress ia = null;
-    private DatagramSocket ds = null;
 
     public MasterServer() {
         // use a static initializer:
@@ -51,24 +46,14 @@ public class MasterServer {
      
         MessageResponse mr = null;
         try {
-            mr = new MessageResponse(this.addr, this.port);//, "you are gay");
+            mr = new MessageResponse(this.addr, this.port);
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
-
-
-        
-        System.out.println("msg-resp: "+mr);
         try {
             mr.sendMessage("getservers 68 empty full");
-            //mr.sendMessage("getstatus");
             byte[] r = mr.getResponse();
-
-            //System.out.println("r.length:" +r.length);
-            //for (byte b: r) {
-            //    System.out.println(b);
-            //}
             return r;
         } catch(IOException e) {
             e.printStackTrace();
@@ -90,8 +75,6 @@ public class MasterServer {
     public ArrayList<ImmutablePair<String, Integer>> parse(byte[] bytes) 
     {
         ArrayList<ImmutablePair<String, Integer>> list = new ArrayList<ImmutablePair<String, Integer>>();
-
-        //System.out.println("bytes.length:"+bytes.length);
 
         //find the firt '/' or (byte)92:
         int next, start = ArrayUtils.indexOf(bytes, (byte)92, 0); //this should always be 22
@@ -141,12 +124,8 @@ public class MasterServer {
     
     //series is intended to be the 7 bytes between /'s
     public ImmutablePair<String, Integer> parse_ip_port(byte[] series) {
-        ImmutablePair<String, Integer> pair = null;
-        //System.out.println("parse_ip_port()..." + series[0] + "::" + series[series.length-1] + " length:"+series.length);
-
         if (series.length != 6) {
-            //System.out.println("ERROR length:"+series.length + " != 6");
-            return pair;
+            return null;
         }
 
         // the &0xff "turns" the signed byte into an unsigned (in essence)
@@ -156,7 +135,6 @@ public class MasterServer {
             (series[2]&0xff) + "." + 
             (series[3]&0xff);
         int port = (series[4]*256) + series[5];
-        //System.out.println("ip:" + ip + " port:"+ port);
         return new ImmutablePair<String, Integer>(ip, port);
     }
 

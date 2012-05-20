@@ -18,6 +18,7 @@
 
   <target name="compile" depends="init">
     <javac debug="true" destdir="${build}" srcdir="${src}">
+      <compilerarg value="-Xlint:unchecked" />
       <classpath refid="lib.classpath"/>
     </javac>
   </target>

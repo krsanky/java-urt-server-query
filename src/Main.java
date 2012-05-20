@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.net.*;
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -10,6 +12,7 @@ import org.oldcode.urt.MasterServer;
 import org.oldcode.urt.Util;
 import org.oldcode.urt.ServerDetail;
 import org.oldcode.urt.MessageResponse;
+import org.oldcode.urt.Player;
 
 public class Main {
 
@@ -19,8 +22,6 @@ public class Main {
     }
 
     public static void server_query() {
-        System.out.println("start server getstatus...");
-
         //um3: 68.232.168.18
         byte[] addr = new byte[4];
         addr[0] = (byte)68;
@@ -47,59 +48,22 @@ public class Main {
         a_addr[2] = (byte)120;
         a_addr[3] = (byte)216;
 
-        //URBANTERROR {Z9} Zombie Mode Server Join 35/40 173.236.38.244:27960 ut_rt
-        //URBANTERROR WWW.FALLIN-ANGELS.ORG Join 28/32 209.190.50.170:27960
-
-
-
-        byte oob = (byte)0xff;
-        String data = "getstatus";
-        DatagramPacket dp;
-        DatagramSocket ds = null;
-        InetAddress address = null;;
-        try {
-            address = InetAddress.getByAddress(a_addr);
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        System.out.println("address:"+address);
-        try {
-            ds = new DatagramSocket();
-            String out = "xxxx"+data;
-            byte [] buff = out.getBytes();
-            buff[0] = oob;
-            buff[1] = oob;
-            buff[2] = oob;
-            buff[3] = oob;
-            dp = new DatagramPacket(buff, buff.length, address, port);
-            ds.send(dp);
-        } catch (Exception e) {
-            System.out.println("Send method in BowserQuery Failed with: "+e.getMessage());
-        }
-
-        //get results
-        DatagramPacket dpacket;
-        byte[] buffer = new byte[2048];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        while (true) {
-            System.out.println("getr .");
-            try {
-                dpacket = new DatagramPacket(buffer, buffer.length);
-                ds.setSoTimeout(1000);
-                ds.receive(dpacket);
-                baos.write(dpacket.getData(), 0, dpacket.getLength());
-            } catch (IOException e) { //we shouldn't use an exception for flow control
-                System.out.println("e:"+e);
-                break;
-            }
-        } 
-            
-        byte[] bytes = baos.toByteArray();
-        //for (byte b: bytes) {            System.out.print(b+"-");                    }
-        System.out.println(new String(bytes));
+        ServerDetail sd = new ServerDetail(a_addr, port);
+        byte[] r = null;
         
+        //sd.setResponseFromServer();
+        //r = sd.getResponse();        
+        //System.out.println(new String(r));
+        
+        //HashMap<String, String> vars = sd.getVars();
+        //for (Map.Entry<String, String> e: vars.entrySet()) {
+        //    System.out.println("k:"+e.getKey()+" v:"+e.getValue());
+        //}
+
+        Player[] players = sd.getPlayers();
+        for (Player p: players) {
+            System.out.println(p);
+        }
     }
 
     public static void run_master_query() {
