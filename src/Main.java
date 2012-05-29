@@ -19,13 +19,7 @@ public class Main {
 
     public static void main(String[] args) {
         //run_master_query();
-        //server_query();
-        
-        try {
-            test_sqlite();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        server_query();
     }
 
     public static void server_query() {
@@ -82,39 +76,6 @@ public class Main {
             System.out.println("ip:"+pair.left+" port:"+pair.right);
         }
 
-    }
-
-    public static void test_sqlite()
-        throws Exception 
-    {
-        Class.forName("org.sqlite.JDBC");
-        Connection conn = DriverManager.getConnection("jdbc:sqlite:test.db");
-        Statement stat = conn.createStatement();
-        stat.executeUpdate("drop table if exists people;");
-        stat.executeUpdate("create table people (name, occupation);");
-
-        PreparedStatement prep = conn.prepareStatement("insert into people values (?, ?);");
-        prep.setString(1, "Gandhi");
-        prep.setString(2, "politics");
-        prep.addBatch();
-        prep.setString(1, "Turing");
-        prep.setString(2, "computers");
-        prep.addBatch();
-        prep.setString(1, "Wittgenstein");
-        prep.setString(2, "smartypants");
-        prep.addBatch();
-        
-        conn.setAutoCommit(false);
-        prep.executeBatch();
-        conn.setAutoCommit(true);
-
-        ResultSet rs = stat.executeQuery("select * from people;");
-        while (rs.next()) {
-            System.out.println("name = " + rs.getString("name"));
-            System.out.println("job = " + rs.getString("occupation"));
-        }
-        rs.close();
-        conn.close();
     }
     
 }
