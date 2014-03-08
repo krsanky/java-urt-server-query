@@ -23,34 +23,15 @@ public class Main {
     }
 
     public static void server_query() {
-        //um3: 68.232.168.18
+        //72.5.102.198:27960  6th
         byte[] addr = new byte[4];
-        addr[0] = (byte)68;
-        addr[1] = (byte)232;
-        addr[2] = (byte)168;
-        addr[3] = (byte)18;
+        addr[0] = (byte)72;
+        addr[1] = (byte)5;
+        addr[2] = (byte)102;
+        addr[3] = (byte)198;
         int port = 27960;
-        //sm: 64.74.97.153 27960
-        //    64.74.97.153
-        byte[] sm_addr = new byte[4];
-        sm_addr[0] = (byte)64;
-        sm_addr[1] = (byte)74;
-        sm_addr[2] = (byte)97;
-        sm_addr[3] = (byte)153;
-        byte[] mst_addr = new byte[4];
-        mst_addr[0] = (byte)91;
-        mst_addr[1] = (byte)121;
-        mst_addr[2] = (byte)24;
-        mst_addr[3] = (byte)62;
-        int mst_port = 27950;
-        //67.202.120.216:27960 ut4_abbey
-        byte[] a_addr = new byte[4];
-        a_addr[0] = (byte)67;
-        a_addr[1] = (byte)202;
-        a_addr[2] = (byte)120;
-        a_addr[3] = (byte)216;
 
-        ServerDetail sd = new ServerDetail(a_addr, port);
+        ServerDetail sd = new ServerDetail(addr, port);
         byte[] r = null;
         
         //sd.setResponseFromServer();

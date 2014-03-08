@@ -23,13 +23,21 @@
     </javac>
   </target>
 
+  <target name="jar" depends="compile">
+      <!-- <mkdir dir="${jar.dir}"/> -->
+    <jar destfile="q3.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="Main"/>
+      </manifest>
+    </jar>
+  </target>
+
   <target name="clean">
     <delete dir="${build}" />
   </target>
 
   <target name="run" depends="compile">
-    <java classname="Main"
-          fork="true" >
+    <java classname="Main" fork="true" >
       <classpath refid="lib.classpath"/>
       <classpath>
         <pathelement path="${build}"/>
