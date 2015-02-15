@@ -2,7 +2,6 @@ package org.oldcode.urt;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.net.InetAddress;
 
 public class Util {
 

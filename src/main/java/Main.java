@@ -1,43 +1,31 @@
-import java.util.ArrayList;
-
-import java.sql.*;
-import java.io.IOException;
-import java.net.*;
-import java.io.ByteArrayOutputStream;
-import java.util.Map;
-import java.util.HashMap;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
-
 import org.oldcode.urt.MasterServer;
-import org.oldcode.urt.Util;
 import org.oldcode.urt.ServerDetail;
-import org.oldcode.urt.MessageResponse;
 import org.oldcode.urt.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
-        //run_master_query();
+        run_master_query();
         server_query();
+        System.out.println("asd...");
     }
 
     public static void server_query() {
-        //72.5.102.198:27960  6th
+        //64.74.97.153   Port: 27960    superman
         byte[] addr = new byte[4];
-        addr[0] = (byte)72;
-        addr[1] = (byte)5;
-        addr[2] = (byte)102;
-        addr[3] = (byte)198;
+        addr[0] = (byte)64;
+        addr[1] = (byte)74;
+        addr[2] = (byte)97;
+        addr[3] = (byte)153;
         int port = 27960;
 
         ServerDetail sd = new ServerDetail(addr, port);
-        byte[] r = null;
-        
-        //sd.setResponseFromServer();
-        //r = sd.getResponse();        
-        //System.out.println(new String(r));
-        
+
         HashMap<String, String> vars = sd.getVars();
         for (Map.Entry<String, String> e: vars.entrySet()) {
             System.out.println("k:"+e.getKey()+" v:"+e.getValue());

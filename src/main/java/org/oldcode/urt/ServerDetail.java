@@ -2,12 +2,8 @@ package org.oldcode.urt;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-
-import org.oldcode.urt.MessageResponse;
-import org.oldcode.urt.Player;
 
 public class ServerDetail {
 

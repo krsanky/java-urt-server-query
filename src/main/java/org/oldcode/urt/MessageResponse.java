@@ -43,10 +43,10 @@ public class MessageResponse {
 
         String out = "xxxx" + msg;
         byte[] buff = out.getBytes();
-        buff[0] = this.oob;
-        buff[1] = this.oob;
-        buff[2] = this.oob;
-        buff[3] = this.oob;
+        buff[0] = oob;
+        buff[1] = oob;
+        buff[2] = oob;
+        buff[3] = oob;
         DatagramPacket dp = new DatagramPacket(buff, buff.length, this.address, this.port);
 
         //System.out.println("sending:" + buff);

@@ -1,7 +1,5 @@
 package org.oldcode.urt;
 
-import org.oldcode.urt.Util;
-
 public class Player {
     private String name;
     private int ping;

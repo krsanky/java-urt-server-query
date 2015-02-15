@@ -2,10 +2,6 @@ package org.oldcode.urt;
 
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.net.DatagramSocket; 
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ArrayIndexOutOfBoundsException;
 
@@ -13,8 +9,6 @@ import java.lang.IllegalArgumentException;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-
-import org.oldcode.urt.MessageResponse;
 
 public class MasterServer {
 
@@ -35,11 +29,11 @@ public class MasterServer {
     {
         byte[] bytes = getServersResponse(); 
 
-        if (bytes != null) {
-            //System.out.println("bytes.length:"+bytes.length);        
+        if ((bytes != null) && (bytes.length > 0)) {
+            //System.out.println("bytes.length:"+bytes.length);
             return parse(bytes);
         }
-        return null;
+        return new ArrayList<ImmutablePair<String, Integer>>();
     }
 
     public byte[] getServersResponse() {
