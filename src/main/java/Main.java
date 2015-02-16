@@ -16,7 +16,8 @@ public class Main {
     }
 
     public static void server_query() {
-        //64.74.97.153   Port: 27960    superman
+        // 64.74.97.153   Port: 27960    superman
+        // 64.94.238.89   Port: 27960   urtctf
         byte[] addr = new byte[4];
         addr[0] = (byte)64;
         addr[1] = (byte)74;

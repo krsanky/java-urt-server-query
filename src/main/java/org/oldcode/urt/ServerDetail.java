@@ -42,17 +42,21 @@ public class ServerDetail {
     }
 
     public HashMap<String, String> getVars() {
+        HashMap<String, String> map = new HashMap<String, String>();
         if (response == null) {
             if (! setResponseFromServer()) {
-                return null;
+                return map;
             }
         }
         String str = new String(this.response);
         String[] lines = str.split("\\n");
-        String raw_vars = lines[1];
+        String raw_vars;
+        if (lines.length > 1)
+            raw_vars = lines[1];
+        else
+            return map;
 
         String[] pieces = raw_vars.split("\\\\");
-        HashMap<String, String> map = new HashMap<String, String>();
         for (int i=1; i<pieces.length; i++) {
             //System.out.println("HHH"+pieces[i]+"PPP");
             if ((i+1) < pieces.length) {
