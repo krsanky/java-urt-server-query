@@ -1,39 +1,22 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        //clojarsRepo()
-        maven { url 'http://clojars.org/repo' }
-    }
-    dependencies {
-        classpath 'clojuresque:clojuresque-base:1.7.0'
-    }
-}
-
-apply plugin: 'clojure-min'
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'application'
-
-clojure {
-    warnOnReflection = true
-    aotCompile = true
-}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '0.1'
+//group = 'org.oldcode.javaweb'
+version = '0.1.0-SNAPSHOT'
+description = 'FIXME: write description'
 
 repositories {
-    mavenCentral()
-    clojarsRepo()
+    jcenter()
 }
 
 dependencies {
-  compile 'org.clojure:clojure:1.5.1'
-  compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
 }
 
-//mainClassName = "org.oldcode.chrys.main"
 mainClassName = "Main"
 
 task classpath << {
